@@ -3,7 +3,6 @@ import hashlib
 import sys
 
 pass_check_url = 'https://api.pwnedpasswords.com/range/'
-result = []
 
 def hash_pass(password):
   return hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
@@ -22,20 +21,24 @@ def conver_to_list(res):
 def check_for_hash_password(resList,hPassword):
   for li in resList:
     if li[0] == hPassword:
-      return (li[0],li[1])
+      return li[1]
+  return ''
 
-# hashedPass = hash_pass(password)
-# responseText = req_api_data(pass_check_url, hashedPass[:5] ).text
+def pawned_password_message(myDict):
+  if myDict["numberOfPawned"]:
+    print(f'{myDict["password"]} was found {myDict["numberOfPawned"]} times... you shouldn`t use this password')
+  else:
+    print(f'{myDict["password"]} was not found. you can keep it up')
 
-# result = check_for_hash_password(conver_to_list(responseText), hashedPass[5:])
-
-# print( result )
 
 def main(argv,url):
-  for passwordPwned in argv:
-    first5_char, tail = hash_pass(passwordPwned)[:5],hash_pass(passwordPwned)[5:]
+  for password in argv:
+    first5_char, tail = hash_pass(password)[:5],hash_pass(password)[5:]
     responseText = req_api_data(url, first5_char ).text
-    result.append(check_for_hash_password(conver_to_list(responseText), tail))
-  print(result)
+    listOfResponsedPass = conver_to_list(responseText)
+    result = {"password":password,"numberOfPawned":check_for_hash_password(listOfResponsedPass, tail)}
+    pawned_password_message(result)
+  return "***  bye have great time  ***"
 
-main(sys.argv[1:],pass_check_url)
+if __name__ == '__main__':
+  sys.exit(main(sys.argv[1:],pass_check_url))

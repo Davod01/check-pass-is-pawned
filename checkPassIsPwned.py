@@ -24,9 +24,9 @@ def check_for_hash_password(resList,hPassword):
       return li[1]
   return ''
 
-def pawned_password_message(myDict):
-  if myDict["numberOfPawned"]:
-    print(f'{myDict["password"]} was found {myDict["numberOfPawned"]} times... you shouldn`t use this password')
+def pwned_password_message(myDict):
+  if myDict["numberOfPwned"]:
+    print(f'{myDict["password"]} was found {myDict["numberOfPwned"]} times... you shouldn`t use this password')
   else:
     print(f'{myDict["password"]} was not found. you can keep it up')
 
@@ -36,8 +36,8 @@ def main(argv,url):
     first5_char, tail = hash_pass(password)[:5],hash_pass(password)[5:]
     responseText = req_api_data(url, first5_char ).text
     listOfResponsedPass = conver_to_list(responseText)
-    result = {"password":password,"numberOfPawned":check_for_hash_password(listOfResponsedPass, tail)}
-    pawned_password_message(result)
+    result = {"password":password,"numberOfPwned":check_for_hash_password(listOfResponsedPass, tail)}
+    pwned_password_message(result)
   return "***  bye have great time  ***"
 
 if __name__ == '__main__':
